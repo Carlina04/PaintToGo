@@ -1,12 +1,15 @@
 import {useNavigate} from "react-router-dom"
 import {Link} from 'react-router-dom';
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import Profile from './Profile'
 import axios from 'axios';
+import api from "../api/api";
 
 export default function Customer(){
     const user_id = sessionStorage.getItem('user_id');
     const branch_id = sessionStorage.getItem('branch_id');
+    const [ displayU , setCustomer ] = useState([]);
+    
 
     const navigate = useNavigate();
     function logOut() {
@@ -14,16 +17,20 @@ export default function Customer(){
         navigate('/');
     }
 
-    function prof(){
+   const display = async (e)=>{
+        const res = await api.displayU();
+        setCustomer(res.data.users); 
+        console.log(res);
+        console.log(user_id);
         navigate('/profile');
-    }
+   }
     return ( 
         <div> 
             <h1>Customer page {user_id}</h1> 
             <button onClick = {logOut}> LogOut </button>
             <div>
-            
-            <Link to={'/profile'} className="my-2 border-0 btn btn-primary btn-sm float-end text-dark bg-light py-3">Profile</Link>
+            {displayU.user_id}
+           <button onClick={display}>Profile<input type="hidden" name='profile' value="{{user_id}}"></input></button>
             </div>
         </div>
         

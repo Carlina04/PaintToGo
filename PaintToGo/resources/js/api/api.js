@@ -30,4 +30,9 @@ export default {
     nullC: () => {
         return axios.get(`${BASE_API_URL}/nCList`);
     },
+
+    //users
+    displayU: ()=>{
+        return axios.get(`${BASE_API_URL}/profile`);
+    }
 }
