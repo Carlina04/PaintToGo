@@ -35,4 +35,26 @@ export default {
     displayU: ()=>{
         return axios.get(`${BASE_API_URL}/profile`);
     }
+    //view requests, orders, consultations
+    viewRList: (params) => {
+        return axios.get(`${BASE_API_URL}/viewRList`, params);
+    },
+    viewOList: (params) => {
+        return axios.get(`${BASE_API_URL}/viewOList`, params);
+    },
+
+
+
+    //approvebtns here
+    approveRBtn: (params) => {
+        return axios.get(`${BASE_API_URL}/approveRBtn`, params);
+    },
+
+    approveOBtn: (params) => {
+        return axios.get(`${BASE_API_URL}/approveOBtn`, params);
+    },
+
+    approveCBtn: (params) => {
+        return axios.get(`${BASE_API_URL}/approveCBtn`, params);
+    },
 }

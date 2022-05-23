@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react"
 import api from "../api/api";
 import {useNavigate} from "react-router-dom"
+import { renderAList } from "../operations/renderAList";
+import NullRequestTable from "./NullRequestTable";
+import NullOrderTable from "./NullOrdersTable";
+import NullConsultationTable from "./NullConsultationTable";
 
 export default function Admin(){
     const user_id = sessionStorage.getItem('user_id');
@@ -10,17 +14,8 @@ export default function Admin(){
     const [ approvedO , setApprovedOList ] = useState([]);
     const [ approvedC , setApprovedCList ] = useState([]);
 
-    const [ nullR , setNullRList ] = useState([]);
-    const [ nullO , setNullOList ] = useState([]);
-    const [ nullC , setNullCList ] = useState([]);
-
-    
-
-
-
     useEffect(() => {
        fetchApprovedList();
-       fetchNullList();
     },[]);
 
         
@@ -39,124 +34,10 @@ export default function Admin(){
         }
     }
 
-    // Fetching Null Status from request, orders and consultations table
-
-    const fetchNullList = async (e) => {
-        try{
-            const resNR = await api.nullR();
-            setNullRList(resNR.data.nullRequests);    
-            const resNO = await api.nullO();
-            setNullOList(resNO.data.nullOrders);   
-            const resNC = await api.nullC();
-            setNullCList(resNC.data.nullConsultations);   
-            }
-        catch (err){
-            console.log(err);
-        }
-    }
-
-
-
     const navigate = useNavigate();
     function logOut() {
         sessionStorage.clear();
         navigate('/');
-    }
-
-    const renderAList = (query, approvedList) => {
-        if (!query) {
-            return (
-                <tr>
-                    <td colSpan="4">
-                        Loading products...
-                    </td>
-                </tr>
-            );
-        };
-        if (query.length === 0) {
-            return (
-                <tr>
-                    <td colSpan="4">
-                        There are no requests available
-                    </td>
-                </tr>
-            );
-        };
-        
-        // For the actions, simply add another <td> with buttons or links towards an action
-            if (approvedList === 1){
-                return query.map((a) => {
-                    return (
-                            <tr key={a.request_id} className="table-contents-odd" >
-                                <td>{a.request_id}</td>
-                                <td>{a.branch_add}</td>
-                                <td>{a.lastName}</td>
-                            </tr> //edit here and test from here
-
-                    );
-                });
-            }
-            else if(approvedList === 2){
-                return query.map((a) => {
-                    return (
-                            <tr key={a.order_id} className="table-contents-odd" >
-                                <td>{a.order_id}</td>
-                                <td>{a.branch_add}</td>
-                                <td>{a.lastName}</td>
-                            </tr> //edit here and test from here
-
-                    );
-                });
-            }
-            else if (approvedList === 3){
-                return query.map((a) => {
-                    return (
-                            <tr key={a.consultation_id} className="table-contents-odd" >
-                                <td>{a.consultation_id}</td>
-                                <td>{a.lastName}</td>
-                            </tr> //edit here and test from here
-
-                    );
-                });
-            }
-            if (approvedList === 4){
-                return query.map((a) => {
-                    return (
-                            <tr key={a.request_id} className="table-contents-odd" >
-                                <td>{a.request_id}</td>
-                                <td>{a.branch_add}</td>
-                                <td>{a.lastName}</td>
-                            </tr> //edit here and test from here
-
-                    );
-                });
-            }
-            else if(approvedList === 5){
-                return query.map((a) => {
-                    return (
-                            <tr key={a.order_id} className="table-contents-odd" >
-                                <td>{a.order_id}</td>
-                                <td>{a.branch_add}</td>
-                                <td>{a.lastName}</td>
-                            </tr> //edit here and test from here
-
-                    );
-                });
-            }
-            else if (approvedList === 6){
-                return query.map((a) => {
-                    return (
-                            <tr key={a.consultation_id} className="table-contents-odd" >
-                                <td>{a.consultation_id}</td>
-                                <td>{a.lastName}</td>
-                            </tr> //edit here and test from here
-
-                    );
-                });
-            }
-
-            
-       
     }
 
     return ( 
@@ -173,6 +54,7 @@ export default function Admin(){
                             <th>Request ID</th>
                             <th>Brand Address</th>
                             <th>Lastname</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody className="table-contents">
@@ -188,6 +70,7 @@ export default function Admin(){
                             <th>Order ID</th>
                             <th>Brand Address</th>
                             <th>Lastname</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody className="table-contents">
@@ -203,6 +86,7 @@ export default function Admin(){
                             <th>Consultation ID</th>
                             <th>Branch Add</th>
                             <th>Lastname</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody className="table-contents">
@@ -211,8 +95,10 @@ export default function Admin(){
                 </table>
             </div>
 
+            <br></br>
+
             <div>
-                <h1> NULL statuses </h1>
+                <h1> View details here  </h1>
                 <table className="table">
                     <thead className="table-header">
                         <tr>
@@ -222,7 +108,7 @@ export default function Admin(){
                         </tr>
                     </thead>
                     <tbody className="table-contents">
-                        {renderAList(nullR, 4)}
+                   
                     </tbody>
                 </table>
 
@@ -234,10 +120,11 @@ export default function Admin(){
                             <th>Order ID</th>
                             <th>Brand Address</th>
                             <th>Lastname</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody className="table-contents">
-                        {renderAList(nullO, 5)}
+                       
                     </tbody>
                 </table>
 
@@ -249,13 +136,23 @@ export default function Admin(){
                             <th>Consultation ID</th>
                             <th>Branch Add</th>
                             <th>Lastname</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody className="table-contents">
-                        {renderAList(nullC, 6)}
+                    
                     </tbody>
                 </table>
             </div>
+
+            <div>
+                <h1> NULL statuses </h1>
+                    {NullRequestTable()}
+                    {NullOrderTable()}
+                    {NullConsultationTable()}
+            </div>
+
+            
 
         </div>
     )

@@ -145,5 +145,126 @@ class TransactionListController extends Controller
             return "No null transactions";
         }
     }
+
+
+
+    // view contents of a request, order or consultations
+
+    public function viewRList(Request $req)
+    {
+        $key = $req->input('row_key');
+
+        $query = DB::table('requestList')
+                ->where('requestlist.request_id', $key)
+                ->join('request','request.request_id', '=', 'requestlist.request_id')
+                ->join('product','product.product_id', '=', 'requestlist.product_id')
+                ->get();
+
+        if($query){
+            return response()->json([
+ 
+                'viewRequest' => $query,
+                'key' => $key
+
+            ]);
+            return $query;
+        }  
+        else{
+            return "Can't retrieve data";
+        }
+
+    }
+
+    public function viewOList(Request $req)
+    {
+        $key = $req->input('row_key');
+
+        $query = DB::table('orderlist')
+                ->where('orderlist.order_id', $key)
+                ->join('orders','orders.order_id', '=', 'orderlist.order_id')
+                ->join('product','product.product_id', '=', 'orderlist.product_id')
+                ->get();
+
+        if($query){
+            return response()->json([
+ 
+                'viewOrders' => $query,
+                'key' => $key
+
+            ]);
+            return $query;
+        }  
+        else{
+            return "Can't retrieve data";
+        }
+
+    }
+
+    // approve button for request, order and consultation
+
+    public function approveRBtn(Request $req){
+
+        $id = $req->input('rowKey'); // to get request id
+
+        $upStatus = DB :: table("request")
+                    ->where('request_id',$id)
+                    ->update(['status' => 'Approved']);
+
+            
+        if($upStatus){
+            return response()->json([
+                'message' => "Sucessfully Approved Request",
+                'r_id' => $id,
+            ]);    
+        }
+        else{
+            return response()->json([
+                'message' => "Unsuccessful update",
+            ]);
+        }
+    }
+   
+    public function approveOBtn(Request $req){
+
+        $id = $req->input('rowKey'); // to get request id
+
+        $upStatus = DB :: table("orders")
+                    ->where('order_id',$id)
+                    ->update(['status' => 'Approved']);
+
+        if($upStatus){
+            return response()->json([
+                'message' => "Sucessfully Approved Request",
+                'o_id' => $id,
+            ]);
+
+        }
+        else{
+            return response()->json([
+                'message' => "Unsuccessful update",
+            ]);
+        }
+    }
+    public function approveCBtn(Request $req){
+
+        $id = $req->input('rowKey'); // to get request id
+
+        $upStatus = DB :: table("consultations")
+                    ->where('consultation_id',$id)
+                    ->update(['status' => 'Approved']);
+
+            
+        if($upStatus){
+            return response()->json([
+                'message' => "Sucessfully Approved Request",
+                'c_id' => $id,
+            ]);    
+        }
+        else{
+            return response()->json([
+                'message' => "Unsuccessful update",
+            ]);
+        }
+    }
    
 }
